@@ -150,6 +150,18 @@ paths:
                 $ref: '#/components/schemas/Memberships'
         '400':
           description: Member doesn't exist
+  /fines:
+    get:
+      tags:
+        - Fines
+      responses:
+        '200':
+          description: Returns a list of all the fines. Empty list returned if there are no fines.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Fines'  
+
 
       
         
@@ -164,6 +176,11 @@ components:
           type: integer
     member_id:
       type: integer
+    Fines: 
+      type: object
+      properties:
+        fine: 
+          type: integer
     
   securitySchemes:
     ApiKeyAuth:
