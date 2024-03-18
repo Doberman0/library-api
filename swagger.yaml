@@ -1,0 +1,173 @@
+openapi: 3.0.3
+info:
+  title: Library API
+  description: |-
+    This API emulates the functionality expected needed for the administration of a typical library
+  termsOfService: n/a # TODO: Check later
+  contact:
+    email: DabeerM@hotmail.com
+  license: 
+    name: Apache 2.0 # TODO: Check later
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+  - url: https://library.swagger.io/api/v1
+tags:
+  - name: Memberships
+    description: Managing your library's Memberships
+  - name: Fines
+    description: Management of fines for overdue/lost resources
+  - name: Books
+    description: Management of books/resources(?)
+  - name: Reservations
+    description: API to reserve books/resources
+paths:
+  /membership:
+    get:
+      tags:
+        - Memberships
+      summary: Get a list of all members
+      description: Get a list of all members
+      operationId: getMembers #necessary?
+      responses:
+        '200':
+          description: Retrieved all members
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Memberships'
+        '405':
+          description: Invalid input
+      security:
+        - ApiKeyAuth: []
+  /membership/{member_id}:    
+    post:
+      tags:
+        - Memberships
+      summary: Create a new member
+      description: Create a new member
+      operationId: createMember
+      parameters:
+        - name: member_id
+          in: path
+          description: The id of the member you wish to retrieve
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Create a member
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/newMember'
+        required: true
+      responses:
+        '200':
+          description: Member created
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/newMember'
+        '400':
+          description: Member wasn't created
+        '409':
+          description: Member already exists
+    get:
+      tags:
+        - Memberships
+      summary: Get a specific member by their id 
+      description: Get a specific member by their member_id 
+      operationId: getSpecificMember
+      parameters:
+        - name: member_id
+          in: path
+          description: The id of the member you wish to retrieve
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Get member's details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Memberships'
+        '400':
+          description: Member doesn't exist
+    put:
+      tags:
+        - Memberships
+      summary: Amend member details
+      description: Amend a members details. The details in the request body will replace the current entity that exists.
+      operationId: amendSpecificMember
+      parameters:
+        - name: member_id
+          in: path
+          description: The id of the member you wish to retrieve
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Amend a specific member
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Memberships'
+        required: true
+      responses:
+        '200':
+          description: Member's details have been editted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Memberships'
+        '400':
+          description: Member doesn't exist
+    delete:
+      tags:
+        - Memberships
+      summary: Delete member
+      description: Delete a members details. The details in the request body will replace the current entity that exists.
+      operationId: deleteSpecificMember
+      parameters:
+        - name: member_id
+          in: path
+          description: The id of the member you wish to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Member's details have been deleted
+          
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Memberships'
+        '400':
+          description: Member doesn't exist
+
+      
+        
+components:
+  schemas:
+    Memberships:
+      type: object
+    newMember:
+      type: object
+      properties:
+        memberId:
+          type: integer
+    member_id:
+      type: integer
+    
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      name: api_key
+      in: header
+   
