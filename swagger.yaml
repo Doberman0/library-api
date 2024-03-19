@@ -198,6 +198,8 @@ components:
         email:
           type: string
           format: email
+        name:
+          type: string
     member_id:
       type: integer
     email: 
