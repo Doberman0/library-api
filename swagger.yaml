@@ -150,6 +150,27 @@ paths:
                 $ref: '#/components/schemas/Memberships'
         '400':
           description: Member doesn't exist
+  /membership/{member_id}/email:
+    post: 
+      tags:
+        - Memberships
+        - Email 
+      summary: Send a member an email
+      operationId: sendMemberEmail
+      requestBody:
+        description: Email contents you wish to send
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/email'
+      responses:
+        '200':
+          description: Email sent to member 
+        '499':
+          description: Member does not exist 
+        '400':
+          description: Not sent
   /fines:
     get:
       tags:
@@ -179,6 +200,8 @@ components:
           format: email
     member_id:
       type: integer
+    email: 
+      type: string
     Fines: 
       type: object
       properties:
