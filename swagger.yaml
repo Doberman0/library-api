@@ -154,7 +154,6 @@ paths:
     post: 
       tags:
         - Memberships
-        - Email 
       summary: Send a member an email
       operationId: sendMemberEmail
       requestBody:
