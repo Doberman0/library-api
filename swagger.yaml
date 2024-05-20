@@ -17,8 +17,8 @@ tags:
     description: Managing your library's Memberships
   - name: Fines
     description: Management of fines for overdue/lost resources
-  - name: Books
-    description: Management of books/resources(?)
+  - name: Resources
+    description: Management of books, equipment, and other resources
   - name: Reservations
     description: API to reserve books/resources
 paths:
@@ -172,7 +172,7 @@ paths:
           description: Not sent
   /fines:
     get:
-      tags:
+      tags:  
         - Fines
       summary: Get all the fines
       responses:
@@ -181,23 +181,37 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Fines'  
+                $ref: '#/components/schemas/FineStatus'  
       security:
         - ApiKeyAuth: []
   /fines/{member_id}:
     get:
       tags:
         - Fines
-      summary: Get a list of all the fines for a specific member 
+      summary: Get a list of all the fines for a specific member (i.e. a member's fine history)
       responses:
         '200': 
           description: Returns a list of all the fines for a specific member
           content:
             application/json:
               schema:  
-                $ref: '#/components/schemas/Fines'
-        '409':
+                $ref: '#/components/schemas/FineStatus'
+        '404':
           description: Member not found
+    post:
+      tags:
+        - Fines
+      summary: Sends a fine for a specific member 
+      responses:
+        '200': 
+          description: Adds a fine to a specific member
+          content:
+            application/json:
+              schema:  
+                $ref: '#/components/schemas/Fine'
+        '404':
+          description: Member not found
+  
 
 
       
@@ -220,13 +234,24 @@ components:
       type: integer
     email: 
       type: string
-    Fines: 
+    Fine:
+      type: object
+      properties:
+        fine_value: 
+          type: integer
+        reason:
+          type: string
+          enum: [overdue, replacement, misuse, admin, other]
+    FineStatus: 
       type: object
       properties:
         fine_value: 
           type: integer
         paid:
           type: boolean
+        reason:
+          type: string
+          enum: [overdue, replacement, misuse, admin, other]
     
   securitySchemes:
     ApiKeyAuth:
