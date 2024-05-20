@@ -17,10 +17,10 @@ tags:
     description: Managing your library's Memberships
   - name: Fines
     description: Management of fines for overdue/lost resources
-  - name: Resources
-    description: Management of books, equipment, and other resources
-  - name: Reservations
-    description: API to reserve books/resources
+  - name: Itinerary Management
+    description: Book-keeping for the itinerary
+  - name: Resource Management
+    description: Management of resources 
 paths:
   /membership:
     get:
@@ -28,7 +28,7 @@ paths:
         - Memberships
       summary: Get a list of all members
       description: Get a list of all members
-      operationId: getMembers #necessary?
+      operationId: getMembers
       responses:
         '200':
           description: Retrieved all members
@@ -211,11 +211,70 @@ paths:
                 $ref: '#/components/schemas/Fine'
         '404':
           description: Member not found
-  
+  /resources:
+    get:
+      tags:
+        - Itinerary Management
+      summary: Get all the resources
+      responses:
+        '200':
+          description: Retrieved a list of all the resources
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/resources'
+        '401':
+          description: Unauthorized
+    post:
+      tags:
+        - Itinerary Management
+      summary: Create a new resource
+      responses:
+        '201':
+          description: Resource created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/resource'
+
+  /resources/{resource_id}:
+    get:
+     tags:
+       - Itinerary Management
+     summary: Get a specific resource
+     responses:
+       '200':
+         description: Retrieved a list of all the resources
+         content:
+           application/json:
+             schema:
+                $ref: '#/components/schemas/resource'
+       '401':
+          description: Unauthorized
+    delete:
+      tags:
+        - Itinerary Management
+      summary: Delete a resource
+      responses:
+        '201':
+          description: Resource deleted
+        '404':
+          description: Resource not found
+    patch:
+      tags:
+        - Itinerary Management
+      summary: Update a resource
+      responses:
+        '201':
+          description: Update a resource
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/resource'
+        '404':  
+          description: Resource not found
 
 
-      
-        
 components:
   schemas:
     Memberships:
@@ -252,6 +311,23 @@ components:
         reason:
           type: string
           enum: [overdue, replacement, misuse, admin, other]
+    resources:
+      type: array
+      items:
+        $ref: '#/components/schemas/resource'
+    resource: 
+      type: object
+      properties:
+        name:
+          type: string
+        resource_monetary_value:
+          type: number
+        date_purchased:
+          type: string
+          format: date
+        type:
+          type: string
+          enum: [book, cd/dvd, laptop, other]
     
   securitySchemes:
     ApiKeyAuth:
